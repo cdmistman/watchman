@@ -17,7 +17,7 @@ import (
 	"github.com/fortytw2/leaktest"
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/watchman"
+	"github.com/cdmistman/watchman"
 )
 
 const pause = 250 * time.Millisecond

@@ -3,7 +3,7 @@ package watchman
 import (
 	"runtime"
 
-	"github.com/sjansen/watchman/protocol"
+	"github.com/cdmistman/watchman/protocol"
 )
 
 type eventloop struct {

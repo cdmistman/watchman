@@ -1,4 +1,4 @@
-module github.com/sjansen/watchman
+module github.com/cdmistman/watchman
 
 go 1.17
 

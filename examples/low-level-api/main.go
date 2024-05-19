@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/sjansen/watchman/protocol"
+	"github.com/cdmistman/watchman/protocol"
 )
 
 func main() {

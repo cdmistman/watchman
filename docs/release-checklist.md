@@ -23,4 +23,4 @@
 
 1) Update GitHub.
 
-    * https://github.com/sjansen/watchman/releases
+    * https://github.com/cdmistman/watchman/releases

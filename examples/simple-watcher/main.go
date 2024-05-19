@@ -8,7 +8,7 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/sjansen/watchman"
+	"github.com/cdmistman/watchman"
 )
 
 var (

@@ -10,7 +10,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/watchman/protocol"
+	"github.com/cdmistman/watchman/protocol"
 )
 
 const subName = "TANSTAAFL"

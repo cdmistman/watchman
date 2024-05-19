@@ -1,26 +1,26 @@
 # Go Watchman Client
 
-[![GoDoc](https://godoc.org/github.com/sjansen/watchman?status.svg)](https://pkg.go.dev/github.com/sjansen/watchman)
-[![Latest Release](https://img.shields.io/github/release/sjansen/watchman.svg)](https://github.com/sjansen/watchman/releases)
+[![GoDoc](https://godoc.org/github.com/cdmistman/watchman?status.svg)](https://pkg.go.dev/github.com/cdmistman/watchman)
+[![Latest Release](https://img.shields.io/github/release/cdmistman/watchman.svg)](https://github.com/cdmistman/watchman/releases)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![License](https://img.shields.io/github/license/sjansen/watchman.svg)](https://github.com/sjansen/watchman/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/cdmistman/watchman.svg)](https://github.com/cdmistman/watchman/blob/master/LICENSE)
 [![FOSSA Status](https://app.fossa.io/api/projects/custom%2B6054%2Fwatchman.svg?type=shield)](https://app.fossa.io/projects/custom%2B6054%2Fwatchman?ref=badge_shield)
-[![Sourcegraph](https://sourcegraph.com/github.com/sjansen/watchman/-/badge.svg)](https://sourcegraph.com/github.com/sjansen/watchman?badge)
+[![Sourcegraph](https://sourcegraph.com/github.com/cdmistman/watchman/-/badge.svg)](https://sourcegraph.com/github.com/cdmistman/watchman?badge)
 
-[![Build Status](https://travis-ci.com/sjansen/watchman.svg?branch=master)](https://travis-ci.com/sjansen/watchman)
-[![codecov](https://codecov.io/gh/sjansen/watchman/branch/master/graph/badge.svg)](https://codecov.io/gh/sjansen/watchman)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b0154642757849ac97236455de65bd05)](https://www.codacy.com/app/sjansen/watchman)
-[![Go Report Card](https://goreportcard.com/badge/github.com/sjansen/watchman)](https://goreportcard.com/report/github.com/sjansen/watchman)
-[![Maintainability](https://api.codeclimate.com/v1/badges/5033a51bdd94fbe70a06/maintainability)](https://codeclimate.com/github/sjansen/watchman/maintainability)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=sjansen/boundaries)](https://dependabot.com)
+[![Build Status](https://travis-ci.com/cdmistman/watchman.svg?branch=master)](https://travis-ci.com/cdmistman/watchman)
+[![codecov](https://codecov.io/gh/cdmistman/watchman/branch/master/graph/badge.svg)](https://codecov.io/gh/cdmistman/watchman)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b0154642757849ac97236455de65bd05)](https://www.codacy.com/app/cdmistman/watchman)
+[![Go Report Card](https://goreportcard.com/badge/github.com/cdmistman/watchman)](https://goreportcard.com/report/github.com/cdmistman/watchman)
+[![Maintainability](https://api.codeclimate.com/v1/badges/5033a51bdd94fbe70a06/maintainability)](https://codeclimate.com/github/cdmistman/watchman/maintainability)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=cdmistman/boundaries)](https://dependabot.com)
 
 This Go module provides a client for Facebook's
 [Watchman](https://facebook.github.io/watchman/), a file watching
 service with support for recording and querying filesystem state.
 Two alternative APIs are provided. The
-[high-level API](https://godoc.org/github.com/sjansen/watchman)
+[high-level API](https://godoc.org/github.com/cdmistman/watchman)
 is designed for common use cases. The
-[low-level API](https://godoc.org/github.com/sjansen/watchman/protocol)
+[low-level API](https://godoc.org/github.com/cdmistman/watchman/protocol)
 is designed to enable advanced use cases.
 
 ## Frequently Asked Questions

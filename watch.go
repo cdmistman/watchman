@@ -3,7 +3,7 @@ package watchman
 import (
 	"time"
 
-	"github.com/sjansen/watchman/protocol"
+	"github.com/cdmistman/watchman/protocol"
 )
 
 // A Watch represents a directory, or watched root, that Watchman is watching for changes.

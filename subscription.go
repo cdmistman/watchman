@@ -1,6 +1,6 @@
 package watchman
 
-import "github.com/sjansen/watchman/protocol"
+import "github.com/cdmistman/watchman/protocol"
 
 // A Subscription represents a request to receive notification of changes to a watched root.
 type Subscription struct {
