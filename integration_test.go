@@ -1,6 +1,3 @@
-//go:build integration
-// +build integration
-
 package watchman_test
 
 import (
