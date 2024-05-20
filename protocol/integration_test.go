@@ -78,7 +78,7 @@ func TestSendAndRecv(t *testing.T) {
 
 	// subscribe
 	err = c.Send(&protocol.SubscribeRequest{
-		Root: testdata,
+		Root: watchRoot,
 		Name: subName,
 	})
 	require.NoError(err)
@@ -92,7 +92,7 @@ func TestSendAndRecv(t *testing.T) {
 
 	// unsubscribe
 	err = c.Send(&protocol.UnsubscribeRequest{
-		Root: testdata,
+		Root: watchRoot,
 		Name: subName,
 	})
 	require.NoError(err)
@@ -114,7 +114,7 @@ func TestSendAndRecv(t *testing.T) {
 
 	pdu = unilaterals[0]
 	require.Equal(pdu["subscription"], subName)
-	require.Equal(pdu["root"], testdata)
+	require.Equal(pdu["root"], watchRoot)
 	require.NotEmpty(pdu["clock"])
 	require.NotEmpty(pdu["files"])
 
