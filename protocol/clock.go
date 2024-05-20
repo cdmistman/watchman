@@ -22,7 +22,8 @@ func (req *ClockRequest) Args() []interface{} {
 		return []interface{}{"clock", req.Path}
 	}
 	m := map[string]int{"sync_timeout": req.SyncTimeout}
-	return []interface{}{"clock", req.Path, m}
+	args := []interface{}{"clock", req.Path, m}
+	return args
 }
 
 // A ClockResponse represents a response to the Watchman clock command.

@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/cdmistman/watchman/protocol"
+	"github.com/cdmistman/watchman/protocol/query"
 )
 
 const subName = "TANSTAAFL"
@@ -78,8 +79,9 @@ func TestSendAndRecv(t *testing.T) {
 
 	// subscribe
 	err = c.Send(&protocol.SubscribeRequest{
-		Root: watchRoot,
-		Name: subName,
+		Root:  watchRoot,
+		Name:  subName,
+		Query: &query.Query{},
 	})
 	require.NoError(err)
 

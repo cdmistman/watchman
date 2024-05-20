@@ -1,5 +1,7 @@
 package protocol
 
+import "github.com/cdmistman/watchman/protocol/query"
+
 /*
 ["subscribe","/tmp","sub1",{"fields":["exists","name","type"]}]
 {"clock":"c:1531594843:978:9:826","subscribe":"sub1","version":"4.9.0"}
@@ -36,18 +38,24 @@ package protocol
 //
 // See also: https://facebook.github.io/watchman/docs/cmd/subscribe.html
 type SubscribeRequest struct {
-	Root string
-	Name string
+	Root  string
+	Name  string
+	Query *query.Query
 }
 
 // Args returns values used to encode a request PDU.
 func (req *SubscribeRequest) Args() []interface{} {
-	m := map[string]interface{}{
-		"fields": []string{
-			"cclock", "ctime", "exists", "gid", "mode", "mtime", "name",
-			"nlink", "oclock", "size", "symlink_target", "type", "uid",
-		}}
-	return []interface{}{"subscribe", req.Root, req.Name, m}
+	res := []interface{}{
+		"subscribe",
+		req.Root,
+		req.Name,
+	}
+
+	if req.Query != nil {
+		res = append(res, req.Query)
+	}
+
+	return res
 }
 
 // A SubscribeResponse represents a response to the Watchman subscribe command.
@@ -92,7 +100,7 @@ type Subscription struct {
 	clock           string
 	root            string
 	subscription    string
-	files           []map[string]interface{}
+	files           []interface{}
 	isFreshInstance bool
 }
 
@@ -108,12 +116,7 @@ func NewSubscription(pdu ResponsePDU) (s *Subscription) {
 	}
 	if x, ok := pdu["files"]; ok {
 		if files, ok := x.([]interface{}); ok {
-			s.files = make([]map[string]interface{}, 0, len(files))
-			for _, file := range files {
-				if data, ok := file.(map[string]interface{}); ok {
-					s.files = append(s.files, data)
-				}
-			}
+			s.files = files
 		}
 	}
 	if x, ok := pdu["is_fresh_instance"]; ok {
@@ -141,7 +144,7 @@ func (s *Subscription) Clock() string {
 }
 
 // Files returns a list of of relative filepaths.
-func (s *Subscription) Files() []map[string]interface{} {
+func (s *Subscription) Files() []interface{} {
 	return s.files
 }
 

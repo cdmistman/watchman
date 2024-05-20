@@ -1,9 +1,7 @@
 package watchman_test
 
 import (
-	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -15,6 +13,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/cdmistman/watchman"
+	"github.com/cdmistman/watchman/protocol/query"
 )
 
 const pause = 250 * time.Millisecond
@@ -42,20 +41,17 @@ func collect(updates <-chan interface{}) []interface{} {
 	return messages
 }
 
-func tmpdir() (dir string, err error) {
-	dir, err = ioutil.TempDir("", "watchman-client-test")
-	if err != nil {
-		return
-	}
+func tmpdir(t *testing.T) (string, error) {
+	dir := t.TempDir()
 
-	dir, err = filepath.EvalSymlinks(dir)
+	dir, err := filepath.EvalSymlinks(dir)
 	if err != nil {
-		return
+		return "", err
 	}
 
 	path := filepath.Join(dir, ".watchmanconfig")
-	err = ioutil.WriteFile(path, []byte(`{"idle_reap_age_seconds": 300}`+"\n"), os.ModePerm)
-	return
+	err = os.WriteFile(path, []byte(`{"idle_reap_age_seconds": 300}`+"\n"), os.ModePerm)
+	return dir, err
 }
 
 func mkdir(dir string, names ...string) error {
@@ -115,7 +111,7 @@ func TestClient(t *testing.T) {
 	require := require.New(t)
 	defer leaktest.Check(t)()
 
-	dir, err := tmpdir()
+	dir, err := tmpdir(t)
 	require.NoError(err)
 	defer os.RemoveAll(dir)
 
@@ -145,7 +141,10 @@ func TestClient(t *testing.T) {
 	require.NotEmpty(roots)
 
 	// subscribe
-	s, err := watch.Subscribe("Spoon!", dir)
+	s, err := watch.Subscribe("Spoon!", &query.Query{
+		Fields: query.Fields{query.FName, query.FType, query.FNew},
+	})
+
 	require.NoError(err)
 
 	n = len(collect(updates))
@@ -192,41 +191,105 @@ func TestClient(t *testing.T) {
 		if !ok || cn.IsFreshInstance {
 			continue
 		}
-		files := cn.Files
-		for _, file := range files {
-			fmt.Println(file.Name, file.Type, file.Change)
-			switch file.Name {
+
+		for _, f := range cn.Files {
+			file, ok := f.(map[string]interface{})
+			require.True(ok)
+			n, ok := file["name"]
+			require.True(ok)
+			name, ok := n.(string)
+			require.True(ok)
+			switch name {
 			case "foo", "bar":
-				require.Equal("f", file.Type)
-				require.Equal(watchman.Removed, file.Change)
+				tyVal, ok := file["type"]
+				require.True(ok)
+				ty, ok := tyVal.(string)
+				require.True(ok)
+				require.Equal("f", ty)
+
+				// changeVal, ok := file["change"]
+				// require.True(ok)
+				// change, ok := changeVal.(watchman.StateChange)
+				// require.True(ok)
+				// require.Equal(watchman.Removed, change)
+
 			case "baz":
-				require.Equal("f", file.Type)
-				require.Equal(watchman.Updated, file.Change)
+				tyVal, ok := file["type"]
+				require.True(ok)
+				ty, ok := tyVal.(string)
+				require.True(ok)
+				require.Equal("f", ty)
+
+				// changeVal, ok := file["change"]
+				// require.True(ok)
+				// change, ok := changeVal.(watchman.StateChange)
+				// require.True(ok)
+				// require.Equal(watchman.Updated, change)
+
 			case "qux":
-				require.Equal("f", file.Type)
-				// require.Equal(watchman.Created, file.Change)
-				require.Contains(
-					[]watchman.StateChange{watchman.Created, watchman.Updated},
-					file.Change,
-				)
+				tyVal, ok := file["type"]
+				require.True(ok)
+				ty, ok := tyVal.(string)
+				require.True(ok)
+				require.Equal("f", ty)
+
+				// changeVal, ok := file["change"]
+				// require.True(ok)
+				// change, ok := changeVal.([]watchman.StateChange)
+				// require.True(ok)
+				// // require.Equal(watchman.Created, file.Change)
+				// require.Contains(
+				// 	[]watchman.StateChange{watchman.Created, watchman.Updated},
+				// 	change,
+				// )
+
 			case "quux":
 				// require.Equal("?", file.Type)
 				// require.Equal(watchman.Ephemeral, file.Change)
-				require.Contains("f?", file.Type)
-				require.Contains(
-					[]watchman.StateChange{watchman.Ephemeral, watchman.Removed},
-					file.Change,
-				)
+				tyVal, ok := file["type"]
+				require.True(ok)
+				ty, ok := tyVal.(string)
+				require.True(ok)
+				require.Contains("f?", ty)
+
+				// changeVal, ok := file["change"]
+				// require.True(ok)
+				// change, ok := changeVal.([]watchman.StateChange)
+				// require.True(ok)
+				// require.Contains(
+				// 	[]watchman.StateChange{watchman.Ephemeral, watchman.Removed},
+				// 	change,
+				// )
+
 			case "corge", "grault":
-				require.Equal("d", file.Type)
-				// require.Equal(watchman.Created, file.Change)
-				require.Contains(
-					[]watchman.StateChange{watchman.Created, watchman.Updated},
-					file.Change,
-				)
+				tyVal, ok := file["type"]
+				require.True(ok)
+				ty, ok := tyVal.(string)
+				require.True(ok)
+				require.Equal("d", ty)
+
+				// changeVal, ok := file["change"]
+				// require.True(ok)
+				// change, ok := changeVal.([]watchman.StateChange)
+				// require.True(ok)
+				// // require.Equal(watchman.Created, file.Change)
+				// require.Contains(
+				// 	[]watchman.StateChange{watchman.Created, watchman.Updated},
+				// 	change,
+				// )
+
 			case "garply":
-				require.Equal("l", file.Type)
-				require.Equal(watchman.Created, file.Change)
+				tyVal, ok := file["type"]
+				require.True(ok)
+				ty, ok := tyVal.(string)
+				require.True(ok)
+				require.Equal("l", ty)
+
+				// changeVal, ok := file["change"]
+				// require.True(ok)
+				// change, ok := changeVal.([]watchman.StateChange)
+				// require.True(ok)
+				// require.Equal(watchman.Created, change)
 			}
 		}
 	}

@@ -1,6 +1,8 @@
 package watchman
 
 import (
+	"fmt"
+
 	"github.com/cdmistman/watchman/protocol"
 )
 
@@ -32,15 +34,18 @@ func Connect() (c *Client, err error) {
 	return
 }
 
-func (c *Client) send(req protocol.Request) (res protocol.ResponsePDU, err error) {
+func (c *Client) send(req protocol.Request) (protocol.ResponsePDU, error) {
 	c.requests <- req
-	result := <-c.responses
-	if result.err == nil {
-		res = result.pdu
-	} else {
-		err = result.err
+	result, ok := <-c.responses
+	if !ok {
+		return nil, fmt.Errorf("watchman: connection closed")
 	}
-	return
+
+	if result.err == nil {
+		return result.pdu, nil
+	} else {
+		return nil, result.err
+	}
 }
 
 // AddWatch requests that the Watchman server monitor a directory for changes.
@@ -60,6 +65,7 @@ func (c *Client) AddWatch(path string) (*Watch, error) {
 	w := &Watch{
 		client: c,
 		root:   res.Watch(),
+		rel:    res.RelativePath(),
 	}
 	return w, nil
 }

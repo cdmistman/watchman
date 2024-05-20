@@ -108,21 +108,20 @@ func startEventLoop(conn *protocol.Connection) (l *eventloop, stop func(bool)) {
 	}
 
 	go func() {
-		defer func() {
-			conn.Close()
-			close(responses)
-			close(updates)
-			for range requests {
-				continue
-			}
-		}()
 		for {
 			if ok := expectRequest(); !ok {
-				return
+				break
 			}
 			if ok := expectResponse(); !ok {
-				return
+				break
 			}
+		}
+
+		conn.Close()
+		close(responses)
+		close(updates)
+		for range requests {
+			continue
 		}
 	}()
 

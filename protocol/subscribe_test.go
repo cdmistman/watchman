@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/cdmistman/watchman/protocol/query"
 	"github.com/stretchr/testify/require"
 )
 
@@ -26,6 +27,23 @@ func TestSubscribe(t *testing.T) {
 			req: &SubscribeRequest{
 				Root: "/tmp",
 				Name: "sub1",
+				Query: &query.Query{
+					Fields: query.Fields{
+						query.FCclock,
+						query.FCtime,
+						query.FExists,
+						query.FGid,
+						query.FMode,
+						query.FMtime,
+						query.FName,
+						query.FNlink,
+						query.FOclock,
+						query.FSize,
+						query.FSymlinkTarget,
+						query.FType,
+						query.FUid,
+					},
+				},
 			},
 			res: &SubscribeResponse{
 				response: response{
@@ -109,9 +127,9 @@ func TestNewSubscription(t *testing.T) {
 				root:            "/tmp",
 				subscription:    "sub2",
 				isFreshInstance: true,
-				files: []map[string]interface{}{
-					{"name": "foo/main.go", "exists": true},
-					{"name": "bar/main.go", "exists": true},
+				files: []interface{}{
+					map[string]interface{}{"name": "foo/main.go", "exists": true},
+					map[string]interface{}{"name": "bar/main.go", "exists": true},
 				},
 			},
 		},
@@ -128,8 +146,8 @@ func TestSubscription(t *testing.T) {
 		clock:        "c:2642605954:867:8:937",
 		root:         "/projects/x",
 		subscription: "sub42",
-		files: []map[string]interface{}{
-			{"name": "secrets.txt", "exists": true},
+		files: []any{
+			map[string]any{"name": "secrets.txt", "exists": true},
 		},
 		isFreshInstance: true,
 	}
@@ -137,7 +155,7 @@ func TestSubscription(t *testing.T) {
 	require.Equal(true, s.IsFreshInstance())
 	require.Equal("/projects/x", s.Root())
 	require.Equal("sub42", s.Subscription())
-	require.Equal([]map[string]interface{}{
-		{"name": "secrets.txt", "exists": true},
+	require.Equal([]any{
+		map[string]any{"name": "secrets.txt", "exists": true},
 	}, s.Files())
 }

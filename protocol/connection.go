@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -92,20 +93,27 @@ func (c *Connection) init() (err error) {
 }
 
 // Recv reads and decodes a response PDU from the Watchman server.
-func (c *Connection) Recv() (pdu ResponsePDU, err error) {
+func (c *Connection) Recv() (ResponsePDU, error) {
 	line, err := c.reader.ReadBytes('\n')
 	if err != nil {
 		return nil, err
 	}
 
+	var pdu ResponsePDU
 	if err = json.Unmarshal(line, &pdu); err != nil {
 		return nil, err
 	} else if msg, ok := pdu["error"]; ok {
-		err = &WatchmanError{msg: msg.(string)}
+
+		errMsg, ok := msg.(string)
+		if !ok {
+			errMsg = fmt.Sprintf("%v", msg)
+		}
+
+		err = &WatchmanError{msg: errMsg}
 		return nil, err
 	}
 
-	return
+	return pdu, nil
 }
 
 // Send encodes and sends a request PDU to the Watchman server.
